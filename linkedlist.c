@@ -1,30 +1,34 @@
 /******************************************************************************
 
 Welcome to GDB Online.
-  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
-  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
-  Code, Compile, Run and Debug online from anywhere in world.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
 
 *******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-void add_node_at_end();//Prototype
+void add_node_at_end();//Prototyping
 void display_all_nodes();
+void add_node_at_position();
+void count_nodes();
 
 struct node{
-  int data;
-  struct node *next;
+    int data;
+    struct node *next;
 };
 
 struct node *head;
-
+int length = 0;
 
 int main()
 {
     int ch;
     while(1){
-        printf("\n1. Insert node at end");
-        printf("\n2. Display all nodes");
+        printf("\n1. To add node at end");
+        printf("\n2. To display all nodes");
+        printf("\n3. To add node at position");
+        printf("\n4. To search node in list");
         printf("\n0. Exit");
         printf("\nEnter your choice:");
         scanf("%d", &ch);
@@ -34,7 +38,10 @@ int main()
         else if(ch == 2){
             display_all_nodes();
         }
-        else if(ch == 0){
+        else if(ch == 3){
+            add_node_at_position();
+        }
+        else{
             break;
         }
     }
@@ -42,49 +49,84 @@ int main()
     return 0;
 }
 
-
-//Function to add node at end
 void add_node_at_end(){
-    int val;
-    struct node *ptr, *temp;
+    int data;
+    struct node *ptr, *tmp;
     
-    printf("Enter value:");
-    scanf("%d", &val);
+    printf("Enter value of node:");
+    scanf("%d", &data);
     ptr = (struct node*)malloc(sizeof(struct node));
-    ptr->data = val;
-    //Check if its first node
+    ptr->data = data;
+    ptr->next = NULL;
     if(head == NULL){
-        ptr->next = NULL;
         head = ptr;
     }
     else{
-        //Take first node in consideration
-        temp = head;
-        //Try to find last node
-        while(temp->next != NULL){
-            temp = temp->next;
+        tmp = head;
+        while(tmp->next != NULL){
+            tmp = tmp->next;
         }
-        temp->next = ptr;
-        ptr->next = NULL;
+        tmp->next = ptr;
     }
-    printf("Node inserted");
+    printf("Node added");
 }
 
 void display_all_nodes(){
-    struct node *ptr;
-    int count = 0;
-    ptr = head;
-    if(head == NULL){
-        printf("No node in list");
+    struct node *tmp;
+    int count = 1;
+    tmp = head;
+    if(tmp == NULL){
+        printf("List is empty");
     }
     else{
-        while(ptr->next != NULL){
-            printf("\nNode at %d is %d", count, ptr->data);
-            ptr = ptr->next;
+        while(tmp->next != NULL){
+            printf("\nValue at %d is %d", count, tmp->data);
+            tmp = tmp->next;
             count++;
         }
-        printf("\nNode at %d is %d", count, ptr->data);
+        printf("\nValue at %d is %d", count, tmp->data);
+    }
+}
+
+void add_node_at_position(){
+    int pos, data, count = 0;
+    struct node *ptr, *tmp;
+    printf("Enter position to insert node:");
+    scanf("%d", &pos);
+    count_nodes();
+    if(pos > length){
+        printf("Sorry, length is less than position.");
+    }
+    else{
+        printf("Enter value for node:");
+        scanf("%d", &data);
+        ptr = (struct node*)malloc(sizeof(struct node));
+        ptr->data = data;
+        tmp = head;
+        count = 1;
+        while(tmp->next != NULL){
+            count++;
+            if(pos == count){
+                ptr->next = tmp->next;
+                tmp->next = ptr;
+                break;
+            }
+            tmp = tmp->next;
+        }
+        printf("Node added");
     }
 }
 
 
+void count_nodes(){
+    length = 0;
+    struct node *tmp;
+    if(head != NULL){
+        tmp = head;
+        length++;
+        while(tmp->next != NULL){
+            tmp = tmp->next;
+            length++;
+        }
+    }
+}
